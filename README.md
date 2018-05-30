@@ -33,7 +33,7 @@ The results shows that the recession started in 2008Q3.
 
 This function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
 
-```
+```python
 def get_recession_end():
     gdp = gdp_lead_lag()
     recession_start = get_recession_start()    
@@ -52,7 +52,7 @@ The results show that the recession ended in 2009Q4.
 
 This function returns the year and quarter of the recession bottom time as a string value in a format such as 2005Q3:
 
-```
+```python
 def get_recession_bottom():
     # Load data
     gdp = load_gdp_data()    # Get recession start and end and delete data outside of the recession period
@@ -85,7 +85,7 @@ The following function returns the tuple (different, p, better) where different=
 The value for better is either "university town" or "non-university town" depending on which has 
 a higher mean price ratio (which is equivilent to a reduced market loss).
 
-```
+```python
 def run_ttest():    
     # Create university towns dummy
     u_towns = get_list_of_university_towns()

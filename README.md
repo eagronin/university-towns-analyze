@@ -29,6 +29,7 @@ def get_recession_start():
     return recession_start
 ```
 
+The results shows that the recession started in 2008Q3.
 
 This function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
 
@@ -47,6 +48,7 @@ def get_recession_end():
     return recession_end
 ```
 
+The results show that the recession ended in 2009Q4.
 
 This function returns the year and quarter of the recession bottom time as a string value in a format such as 2005Q3:
 
@@ -69,6 +71,7 @@ def get_recession_bottom():
     return recession
 ```
 
+The results show that the recession bottom was reached in 2009Q2.
 
 ## The t-test
 

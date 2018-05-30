@@ -1,18 +1,86 @@
 # Analysis
 
-This section discusses the analysis ... The analysis is based on the data collected as described in [the data acquisition section](https://eagronin.github.io/my-first-repo/) and processed [here](https://eagronin.github.io/my-first-repo/).
+## Overview 
+This section tests he hypothesis whether university towns have their mean housing prices less effected by recessions. This is done by running a t-test to compare the ratio of the mean price of houses in university towns in the quarter of the recession bottom compared to the quarter before the recession starts. (price_ratio=recession_bottom/quarter_before_recession).
 
-for data collection see [link](...).  for data cleaning and preparation for the final dataset see [link](...)
+The previous step, which describes data cleaning and processing, is described [here](https://eagronin.github.io/university-towns-prepare/).
 
-First create new data showing the decline or growth of housing prices between the recession start and 
-the recession bottom. Then run a ttest comparing the university town values to the non-university towns values, 
-return whether the alternative hypothesis (that the two groups are different) is true or not as well as 
+## Finding Recession Start, End and Bottom
+
+In order to test the hypothesis whether university towns have their mean housing prices less effected by recessions, we first need to define what we mean by recession. 
+
+A recession is defined as starting with two consecutive quarters of GDP decline, and ending with two consecutive quarters of GDP growth.  
+
+A recession bottom is the quarter within a recession which had the lowest GDP.
+
+We then proceed by finding the recession start, recession end and recession bottom in the data.  We will use these figures in 
+
+
+This function returns the year and quarter of the recession start time as a string value in a format such as 2005Q3:
+
+```
+def get_recession_start():
+    gdp = gdp_lead_lag()
+    gdp['Recession Start Dummy'] = 0
+    gdp['Recession Start Dummy'][(gdp['Change in GDP'] < 0) & (gdp['Lead Change in GDP'] < 0)] = 1
+    recession_start = gdp[gdp['Recession Start Dummy'] == 1]
+    recession_start = recession_start.reset_index(drop = True)
+    recession_start = recession_start['Quarter'].iloc[0]
+    return recession_start
+```
+
+
+This function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
+
+```
+def get_recession_end():
+    gdp = gdp_lead_lag()
+    recession_start = get_recession_start()    
+    gdp['Recession Start Dummy'] = np.nan
+    gdp['Recession Start Dummy'][gdp['Quarter'] == recession_start] = 1
+    gdp['Recession Start Dummy'] = gdp['Recession Start Dummy'].ffill()
+    gdp['Recession End Dummy'] = np.nan
+    gdp['Recession End Dummy'][(gdp['Change in GDP'] > 0) & (gdp['Lagged Change in GDP'] > 0)] = 1
+    recession_end = gdp[(gdp['Recession Start Dummy'] == 1) & (gdp['Recession End Dummy'] == 1)]
+    recession_end = recession_end.reset_index(drop = True)
+    recession_end = recession_end['Quarter'].iloc[0]
+    return recession_end
+```
+
+
+This function returns the year and quarter of the recession bottom time as a string value in a format such as 2005Q3:
+
+```
+def get_recession_bottom():
+    # Load data
+    gdp = load_gdp_data()    # Get recession start and end and delete data outside of the recession period
+    start = get_recession_start()
+    end = get_recession_end()
+    gdp['Start'] = np.nan
+    gdp.Start[gdp.Quarter == start] = 1
+    gdp.Start = gdp.Start.ffill()
+    gdp['End'] = np.nan
+    gdp.End[gdp.Quarter == end] = 1
+    gdp.End = gdp.End.bfill()
+    recession = gdp[(gdp.Start == 1) & (gdp.End == 1)]
+    recession = recession[recession.GDP == recession.GDP.min()]
+    recession = recession.reset_index(drop = True)
+    recession = recession.Quarter.iloc[0]
+    return recession
+```
+
+
+## The t-test
+
+First, we create new data showing the decline or growth of housing prices between the recession start and 
+the recession bottom. Then we run a ttest comparing the university town values to the non-university towns values, 
+which returns whether the null hypothesis (that the two groups are the same) is rejected as well as 
 the p-value of the confidence. 
 
-Return the tuple (different, p, better) where different=True if the t-test is True at a p<0.01 
+The following function returns the tuple (different, p, better) where different=True if the t-test is True at a p<0.01 
 (we reject the null hypothesis), or different=False if otherwise (we cannot reject the null hypothesis). 
-The value for better should be either "university town" or "non-university town" depending on which has 
-a lower mean price ratio (which is equivilent to a reduced market loss).
+The value for better is either "university town" or "non-university town" depending on which has 
+a higher mean price ratio (which is equivilent to a reduced market loss).
 
 ```
 def run_ttest():    
@@ -48,4 +116,7 @@ def run_ttest():
     return answer
 a = run_ttest()
 print(a)
-```
+
+## Results
+
+The resulting tuple is (True, 0.0031, 'university town'), which means that the null hypotheses (the two groups are the same) is rejected with the p-value of 0.0031.  It further suggests that university towns experienced smaller housing price declines during the recession of 2008-2009 compared to non-university towns.

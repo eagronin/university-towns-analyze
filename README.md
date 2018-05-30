@@ -19,7 +19,6 @@ We then proceed by finding the recession start, recession end and recession bott
 This function returns the year and quarter of the recession start time as a string value in a format such as 2005Q3:
 
 ```
-// 
 def get_recession_start():
     gdp = gdp_lead_lag()
     gdp['Recession Start Dummy'] = 0

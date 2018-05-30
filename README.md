@@ -114,8 +114,7 @@ def run_ttest():
     print(not_ut.mean())
     answer = (different, p, better)
     return answer
-a = run_ttest()
-print(a)
+```
 
 ## Results
 

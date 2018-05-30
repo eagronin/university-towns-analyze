@@ -1,6 +1,6 @@
 # Analysis
 
-This section discusses the analysis ... The analysis is based on the data collected as described in [the data acquisition section](...) and processed in [the data cleaning section](...)
+This section discusses the analysis ... The analysis is based on the data collected as described in [the data acquisition section](https://eagronin.github.io/my-first-repo/) and processed in [the data cleaning section](...)
 
 for data collection see [link](...).  for data cleaning and preparation for the final dataset see [link](...)
 

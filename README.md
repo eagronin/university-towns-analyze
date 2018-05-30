@@ -1,7 +1,7 @@
 # Analysis
 
 ## Overview 
-This section tests he hypothesis whether university towns have their mean housing prices less effected by recessions. This is done by running a t-test to compare the ratio of the mean price of houses in university towns in the quarter of the recession bottom compared to the quarter before the recession starts. (price_ratio=recession_bottom/quarter_before_recession).
+This section tests the hypothesis whether university towns have their mean housing prices less effected by recessions. This is done by running a t-test to compare the ratio of the mean price of houses in university towns in the quarter of the recession bottom compared to the quarter before the recession starts. (price_ratio=recession_bottom/quarter_before_recession).
 
 The previous step, which describes data cleaning and processing, is described [here](https://eagronin.github.io/university-towns-prepare/).
 

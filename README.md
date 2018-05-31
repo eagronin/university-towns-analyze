@@ -20,13 +20,17 @@ This function returns the year and quarter of the recession start time as a stri
 
 ```python
 def get_recession_start():
+    
     gdp = gdp_lead_lag()
     gdp['Recession Start Dummy'] = 0
     gdp['Recession Start Dummy'][(gdp['Change in GDP'] < 0) & (gdp['Lead Change in GDP'] < 0)] = 1
     recession_start = gdp[gdp['Recession Start Dummy'] == 1]
     recession_start = recession_start.reset_index(drop = True)
     recession_start = recession_start['Quarter'].iloc[0]
+    
     return recession_start
+
+print(get_recession_start())
 ```
 
 The results shows that the recession started in 2008Q3.
@@ -35,17 +39,25 @@ This function returns the year and quarter of the recession end time as a string
 
 ```python
 def get_recession_end():
+    
     gdp = gdp_lead_lag()
     recession_start = get_recession_start()    
+    
+    # Ensure that recession end comes after recession start
     gdp['Recession Start Dummy'] = np.nan
     gdp['Recession Start Dummy'][gdp['Quarter'] == recession_start] = 1
     gdp['Recession Start Dummy'] = gdp['Recession Start Dummy'].ffill()
+    
+    # Impose additional conditions to identify recession end
     gdp['Recession End Dummy'] = np.nan
     gdp['Recession End Dummy'][(gdp['Change in GDP'] > 0) & (gdp['Lagged Change in GDP'] > 0)] = 1
     recession_end = gdp[(gdp['Recession Start Dummy'] == 1) & (gdp['Recession End Dummy'] == 1)]
     recession_end = recession_end.reset_index(drop = True)
     recession_end = recession_end['Quarter'].iloc[0]
+    
     return recession_end
+
+print(get_recession_end())
 ```
 
 The results show that the recession ended in 2009Q4.
@@ -54,8 +66,11 @@ This function returns the year and quarter of the recession bottom time as a str
 
 ```python
 def get_recession_bottom():
-    # Load data
-    gdp = load_gdp_data()    # Get recession start and end and delete data outside of the recession period
+
+    # Load GDP data
+    gdp = load_gdp_data()
+    
+    # Get recession start and end and delete data outside of the recession period
     start = get_recession_start()
     end = get_recession_end()
     gdp['Start'] = np.nan
@@ -65,10 +80,15 @@ def get_recession_bottom():
     gdp.End[gdp.Quarter == end] = 1
     gdp.End = gdp.End.bfill()
     recession = gdp[(gdp.Start == 1) & (gdp.End == 1)]
+    
+    # Find the quarter during which min(GDP) was reached while in recession
     recession = recession[recession.GDP == recession.GDP.min()]
     recession = recession.reset_index(drop = True)
     recession = recession.Quarter.iloc[0]
+    
     return recession
+
+print(get_recession_bottom())
 ```
 
 The results show that the recession bottom was reached in 2009Q2.
@@ -86,14 +106,15 @@ The value for better is either "university town" or "non-university town" depend
 a higher mean price ratio (which is equivilent to a reduced market loss).
 
 ```python
-def run_ttest():    
+def run_ttest():   
+    
     # Create university towns dummy
     u_towns = get_list_of_university_towns()
     u_towns = u_towns[['State', 'RegionName']]
     u_towns['U_Town'] = 1
     u_towns = u_towns.set_index(['State', 'RegionName'])
     
-    # Merge university towns with housing data by state code and region name
+    # Merge university towns with housing prices by state and region name
     x = convert_housing_data_to_quarters()
     x = x.merge(u_towns, how = 'left', left_index = True, right_index = True)
     x.U_Town[x.U_Town.isnull()] = 0
@@ -103,20 +124,23 @@ def run_ttest():
     bottom = get_recession_bottom()
     y = x[[start, bottom, 'U_Town']]
     y['Change'] = y['2009Q2'] / y['2008Q3']
+    
     ut = y[y['U_Town'] == 1]['Change'].dropna()
     not_ut = y[y['U_Town'] == 0]['Change'].dropna()
     t = ttest_ind(ut, not_ut)
     p = t[1]
+    
     different = False
     if p < 0.01:
         different = True
+    
     better = 'university town'
     if ut.mean() < not_ut.mean():
         better = 'non-university town'
-    print(ut.mean())
-    print(not_ut.mean())
-    answer = (different, p, better)
-    return answer
+        
+    return (different, p, better)
+
+print(run_ttest())
 ```
 
 ## Results

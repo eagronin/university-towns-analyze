@@ -1,22 +1,23 @@
 # Analysis
 
 ## Overview 
-This section tests the hypothesis whether university towns have their mean housing prices less effected by recessions. This is done by running a t-test to compare the ratio of the mean price of houses in university towns in the quarter of the recession bottom compared to the quarter before the recession starts. (price_ratio=recession_bottom/quarter_before_recession).
+This section tests a hypothesis whether university towns have their housing prices less effected by recessions, using a t-test. The test compares the ratio of the mean housing price in the quarter of the recession bottom to the quarter before the recession starts between university and non-university towns. (price_ratio = recession_bottom / quarter_before_recession).
 
-The previous step, which describes data cleaning and processing, is described [here](https://eagronin.github.io/university-towns-prepare/).
+Data cleaning and processing are described in the [previous section](https://eagronin.github.io/university-towns-prepare/).
+
+The results are reported in the [next section](https://eagronin.github.io/university-towns-report/).
 
 ## Finding Recession Start, End and Bottom
 
-In order to test the hypothesis whether university towns have their mean housing prices less effected by recessions, we first need to define what we mean by recession. 
+In order to test the hypothesis whether university towns have their housing prices less effected by recessions, we first need to define what we mean by recession. 
 
 A recession is defined as starting with two consecutive quarters of GDP decline, and ending with two consecutive quarters of GDP growth.  
 
 A recession bottom is the quarter within a recession which had the lowest GDP.
 
-We then proceed by finding the recession start, recession end and recession bottom in the data.  We will use these figures in 
+We then proceed by finding the recession start, recession end and recession bottom in the data.  We will use these figures for calculating the ratios of the mean housing prices discussed above.
 
-
-This function returns the year and quarter of the recession start time as a string value in a format such as 2005Q3:
+The following function returns the year and quarter of the recession start time as a string value in a format such as 2005Q3:
 
 ```python
 def get_recession_start():
@@ -35,7 +36,7 @@ print(get_recession_start())
 
 The results shows that the recession started in 2008Q3.
 
-This function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
+The next function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
 
 ```python
 def get_recession_end():
@@ -62,7 +63,7 @@ print(get_recession_end())
 
 The results show that the recession ended in 2009Q4.
 
-This function returns the year and quarter of the recession bottom time as a string value in a format such as 2005Q3:
+The next function returns the year and quarter of the recession bottom as a string value in a format such as 2005Q3:
 
 ```python
 def get_recession_bottom():
@@ -95,15 +96,9 @@ The results show that the recession bottom was reached in 2009Q2.
 
 ## The t-test
 
-First, we create new data showing the decline or growth of housing prices between the recession start and 
-the recession bottom. Then we run a ttest comparing the university town values to the non-university towns values, 
-which returns whether the null hypothesis (that the two groups are the same) is rejected as well as 
-the p-value of the confidence. 
+First, we calculate the decline (or growth) in housing prices between the recession start and recession bottom. Then we run a t-test to determine whether such price declines in university towns are statistically significantly different from the declines in non-university towns.  The t-test returns whether the null hypothesis (that the two groups are the same) is rejected as well as the p-value of the confidence. 
 
-The following function returns the tuple (different, p, better) where different=True if the t-test is True at a p<0.01 
-(we reject the null hypothesis), or different=False if otherwise (we cannot reject the null hypothesis). 
-The value for better is either "university town" or "non-university town" depending on which has 
-a higher mean price ratio (which is equivilent to a reduced market loss).
+The following function returns a tuple (different, p, better) where "different" = True if the the p-value of the t-test p < 0.01 (we reject the null hypothesis), or "different" = False if otherwise (we cannot reject the null hypothesis). The value for "better" is either "university town" or "non-university town" depending on which has a higher mean price ratio (which is equivilent to a reduced market loss).
 
 ```python
 def run_ttest():   
@@ -145,4 +140,4 @@ print(run_ttest())
 
 ## Results
 
-The resulting tuple is (True, 0.0031, 'university town'), which means that the null hypotheses (the two groups are the same) is rejected with the p-value of 0.0031.  It further suggests that university towns experienced smaller housing price declines during the recession of 2008-2009 compared to non-university towns.
+The resulting tuple is (True, 0.0031, 'university town'), which means that the null hypotheses (the two groups are the same) is rejected with the p-value of 0.0031.  This result implies that university towns experienced smaller housing price declines during the recession of 2008-2009 compared to non-university towns.

@@ -5,6 +5,10 @@ This section tests a hypothesis whether university towns have their housing pric
 
 Data cleaning and processing are described in the [previous section](https://eagronin.github.io/university-towns-prepare/).
 
+This project is based on assignments from Introduction to Data Science in Python by University of Michigan on Coursera
+
+The analysis for this project was performed in Python.
+
 ## Finding Recession Start, End and Bottom
 
 In order to test the hypothesis whether university towns have their housing prices less effected by recessions, we first need to define what we mean by recession. 

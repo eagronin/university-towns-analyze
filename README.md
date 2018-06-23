@@ -5,8 +5,6 @@ This section tests a hypothesis whether university towns have their housing pric
 
 Data cleaning and processing are described in the [previous section](https://eagronin.github.io/university-towns-prepare/).
 
-The results are reported in the [next section](https://eagronin.github.io/university-towns-report/).
-
 ## Finding Recession Start, End and Bottom
 
 In order to test the hypothesis whether university towns have their housing prices less effected by recessions, we first need to define what we mean by recession. 

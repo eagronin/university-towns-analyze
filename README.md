@@ -36,7 +36,7 @@ def get_recession_start():
 print(get_recession_start())
 ```
 
-The results shows that the recession started in 2008Q3.
+The results show that the recession started in 2008Q3.
 
 The next function returns the year and quarter of the recession end time as a string value in a format such as 2005Q3:
 
@@ -100,7 +100,7 @@ The results show that the recession bottom was reached in 2009Q2.
 
 First, we calculate the decline (or growth) in housing prices between the recession start and recession bottom. Then we run a t-test to determine whether such price declines in university towns are statistically significantly different from the declines in non-university towns.  The t-test returns whether the null hypothesis (that the two groups are the same) is rejected as well as the p-value of the confidence. 
 
-The following function returns a tuple (different, p, better) where "different" = True if the the p-value of the t-test p < 0.01 (we reject the null hypothesis), or "different" = False if otherwise (we cannot reject the null hypothesis). The value for "better" is either "university town" or "non-university town" depending on which has a higher mean price ratio (which is equivilent to a reduced market loss).
+The following function returns a tuple (different, p, better) where "different" = True if the the p-value of the t-test p < 0.01 (we reject the null hypothesis), or "different" = False if otherwise (we cannot reject the null hypothesis). The value for "better" is either "university town" or "non-university town" depending on which has a higher mean price ratio (which is equivalent to a reduced market loss).
 
 ```python
 def run_ttest():   
